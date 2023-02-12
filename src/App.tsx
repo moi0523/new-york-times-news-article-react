@@ -1,25 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Header } from './lib/component/organisms/header';
+import { useEvent, useMount } from 'react-use';
+import { calculateAlternativeViewportUnit } from './lib/style/mixin';
+import { debounce } from 'lodash';
+import { ArticlePanel } from './lib/component/organisms/articlePanel';
+import { TabPanel } from './lib/component/organisms/tabPanel';
+import { BrowserRouter as Router } from 'react-router-dom';
 
+const debouncedCalculateAlternativeViewportUnit = debounce(calculateAlternativeViewportUnit, 600);
 function App() {
+  useMount(() => {
+    calculateAlternativeViewportUnit();
+  });
+
+  useEvent('resize', debouncedCalculateAlternativeViewportUnit);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Header />
+        <ArticlePanel />
+        <TabPanel />
+      </Router>
+    </>
   );
 }
 
