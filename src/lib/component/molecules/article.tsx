@@ -7,7 +7,7 @@ import { addScrap, deleteScrap } from '../../store/article/scrap';
 import { useDispatch } from 'react-redux';
 
 interface ArticleProps {
-  idx: number;
+  id: string;
   title: string;
   companyName: string;
   writer: string;
@@ -15,7 +15,7 @@ interface ArticleProps {
   createdAt: string;
 }
 
-const Article = ({ idx, title, companyName, writer, isScraped, createdAt }: ArticleProps) => {
+const Article = ({ id, title, companyName, writer, isScraped, createdAt }: ArticleProps) => {
   const [css] = useStyletron();
   const dispatch = useDispatch();
 
@@ -57,7 +57,7 @@ const Article = ({ idx, title, companyName, writer, isScraped, createdAt }: Arti
               e.preventDefault();
               dispatch(
                 addScrap({
-                  idx,
+                  id,
                   title,
                   companyName,
                   writer,
@@ -74,7 +74,7 @@ const Article = ({ idx, title, companyName, writer, isScraped, createdAt }: Arti
             })}
             onClick={(e) => {
               e.preventDefault();
-              dispatch(deleteScrap({ idx }));
+              dispatch(deleteScrap({ id }));
             }}
           />
         )}

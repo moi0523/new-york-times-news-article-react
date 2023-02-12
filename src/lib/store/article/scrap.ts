@@ -20,7 +20,7 @@ export const scrapArticle = createSlice({
       state.scrapArticle.push(scrap);
     },
     deleteScrap(state, action) {
-      state.scrapArticle = state.scrapArticle.filter((scrap) => scrap.idx !== action.payload.idx);
+      state.scrapArticle = state.scrapArticle.filter((scrap) => scrap.id !== action.payload.id);
     },
     getScrap(state, action) {
       state.scrapArticle = action.payload.data;

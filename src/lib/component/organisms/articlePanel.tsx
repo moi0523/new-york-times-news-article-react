@@ -1,123 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { LegacyRef, useEffect, useState } from 'react';
 import { useStyletron } from 'styletron-react';
 import { Article } from '../molecules/article';
 import { padding } from 'polished';
 import { useSelector } from 'react-redux';
 import { ReducerType } from '../../store/store';
 import { SelectedUnion } from '../../store/article/tab';
-
-interface DummyDataInterface {
-  id: number;
-  title: string;
-  companyName: string;
-  writer: string;
-  isScraped: boolean;
-  createdAt: string;
-}
-
-const dummyData: DummyDataInterface[] = [
-  {
-    id: 1,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: true,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 2,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: false,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 3,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: true,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 4,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: false,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 5,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: false,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 6,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: true,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 7,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: false,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 8,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: false,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 9,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: false,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 10,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: false,
-    createdAt: '2021.3.15. (목)',
-  },
-  {
-    id: 11,
-    title: '국방부 “北, 화성-17 실패 만회하려 영상 짜깁기… 성공 조작”',
-    companyName: '조선일보',
-    writer: '김정확 기자',
-    isScraped: false,
-    createdAt: '2021.3.15. (목)',
-  },
-];
+import { getNewsArticleList } from '../../service/api/getNewsArticleList';
+import { processedArticle, ProcessedArticleData } from '../../helper/processedArticle';
+import { useInfiniteScroll } from '../../hook/useInfiniteScroll';
 
 const ArticlePanel = () => {
   const [css] = useStyletron();
-  const [articleData, setArticleData] = useState(dummyData);
   const tab = useSelector<ReducerType, SelectedUnion>((state) => state.tab.selectedTab);
+  const [articleList, setArticleList] = useState<ProcessedArticleData[]>([]);
+  const [articlePage, setArticlePage] = useState<number>(0);
+  const [articleData, setArticleData] = useState<ProcessedArticleData[]>(articleList);
+  const [target, setTarget] = useState(null);
+
+  useEffect(() => {
+    getNewsArticleList({
+      page: articlePage,
+    }).then((data) => {
+      const { docs: articles } = data.response;
+
+      setArticleList(processedArticle(articles));
+      setArticlePage((prev) => prev + 1);
+    });
+  }, []);
+
+  useInfiniteScroll({
+    target: target as unknown as HTMLElement,
+    onIntersect: ([{ isIntersecting }]) => {
+      if (isIntersecting) {
+        getNewsArticleList({
+          page: articlePage,
+        }).then((data) => {
+          const { docs: articles } = data.response;
+
+          setArticleList((prev) => [...prev, ...processedArticle(articles)]);
+        });
+      }
+    },
+  });
 
   useEffect(() => {
     if (tab === 'scrap') {
       setArticleData((prev) => prev.filter((item) => item.isScraped));
     } else {
-      setArticleData(dummyData);
+      setArticleData(articleList);
     }
-  }, [tab]);
+  }, [tab, articleList]);
 
   return (
     <article
@@ -130,15 +62,16 @@ const ArticlePanel = () => {
     >
       {articleData.map((item) => (
         <Article
-          key={`${tab}-${item.id}`}
-          idx={item.id}
-          title={item.title}
-          companyName={item.companyName}
+          id={`${tab}-${item.headline}`}
+          key={`${tab}-${item.headline}`}
+          title={item.headline}
+          companyName={item.source}
           writer={item.writer}
-          isScraped={item.isScraped}
-          createdAt={item.createdAt}
+          isScraped={item.isScraped || false}
+          createdAt={item.pubDate}
         />
       ))}
+      <div ref={setTarget as LegacyRef<HTMLDivElement>} />
     </article>
   );
 };

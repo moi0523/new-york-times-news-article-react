@@ -2,10 +2,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 // import { persistStore } from 'redux-persist';
 import { scrapArticle } from './article/scrap';
 import { tabArticle } from './article/tab';
+import { articleList } from './article/articleList';
 
 const reducer = combineReducers({
   scrap: scrapArticle.reducer,
   tab: tabArticle.reducer,
+  articleList: articleList.reducer,
 });
 
 export const store = configureStore({
@@ -16,4 +18,5 @@ export const store = configureStore({
 
 export type ReducerType = ReturnType<typeof reducer>;
 export type AppDispatch = typeof store.dispatch;
+export { reducer };
 export default { store };

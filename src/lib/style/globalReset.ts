@@ -239,6 +239,7 @@ const GlobalResetStyle = `
   }
 
   body {
+    background-color: #f0f1f4;
     -ms-overflow-style: scrollbar;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
