@@ -2,13 +2,14 @@ import React, { LegacyRef, useEffect, useState } from 'react';
 import { useStyletron } from 'styletron-react';
 import { Article } from '../molecules/article';
 import { padding } from 'polished';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from '../../store/store';
 import { SelectedUnion } from '../../store/article/tab';
 import { getNewsArticleList } from '../../service/api/getNewsArticleList';
 import { processedArticle, ProcessedArticleData } from '../../helper/processedArticle';
 import { useInfiniteScroll } from '../../hook/useInfiniteScroll';
 import { debounce } from 'lodash';
+import { addArticleList, addArticlePage } from '../../store/article/articleList';
 
 const ArticlePanel = () => {
   const [css] = useStyletron();
@@ -16,12 +17,15 @@ const ArticlePanel = () => {
   const scrapArticles = useSelector<ReducerType, ProcessedArticleData[]>(
     (state) => state.scrap.scrapArticle,
   );
-  const [articleList, setArticleList] = useState<ProcessedArticleData[]>([]);
-  const [articlePage, setArticlePage] = useState<number>(0);
+  const articlePage = useSelector<ReducerType, number>((state) => state.articleList.page);
+  const articleList = useSelector<ReducerType, ProcessedArticleData[]>(
+    (state) => state.articleList.list,
+  );
   const [articleData, setArticleData] = useState<ProcessedArticleData[]>();
   const [target, setTarget] = useState(null);
   const [isPendingInfiniteScroll, setIsPendingInfiniteScroll] = useState(true);
   const [isBlockedApi, setIsBlockedApi] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (tab === 'home') {
@@ -30,7 +34,7 @@ const ArticlePanel = () => {
       }).then((data) => {
         const { docs: articles } = data.response;
 
-        setArticleList(processedArticle(articles));
+        dispatch(addArticleList(processedArticle(articles)));
       });
 
       if (isPendingInfiniteScroll) {
@@ -77,8 +81,8 @@ const ArticlePanel = () => {
           .then((data) => {
             const { docs: articles } = data.response;
 
-            setArticleList((prev) => [...prev, ...processedArticle(articles)]);
-            setArticlePage((prev) => prev + 1);
+            dispatch(addArticleList(processedArticle(articles)));
+            dispatch(addArticlePage());
 
             setIsBlockedApi(false);
           })
