@@ -12,9 +12,11 @@ import { Provider as ReduxProvider } from 'react-redux';
 // import { store, persistor } from './lib/store/store';
 import { store } from './lib/store/store';
 
+console.log('1234');
+
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <React.StrictMode>
+  <>
     <Helmet>
       <style>{GlobalResetStyle}</style>
     </Helmet>
@@ -27,7 +29,7 @@ root.render(
       </StyletronProvider>
       {/*</PersistGate>*/}
     </ReduxProvider>
-  </React.StrictMode>,
+  </>,
 );
 
 // If you want to start measuring performance in your app, pass a function

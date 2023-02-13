@@ -6,7 +6,6 @@ interface ProcessedArticleData {
   headline: string;
   pubDate: string;
   writer: string;
-  isScraped?: boolean;
 }
 
 const processedArticle: (data: NewsArticleInterface[]) => ProcessedArticleData[] = (data) => {

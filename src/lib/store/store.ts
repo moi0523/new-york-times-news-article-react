@@ -1,13 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 // import { persistStore } from 'redux-persist';
-import { scrapArticle } from './article/scrap';
-import { tabArticle } from './article/tab';
-import { articleList } from './article/articleList';
+import scrapArticleReducer from './article/scrap';
+import tabArticleReducer from './article/tab';
+import articleListReducer from './article/articleList';
 
 const reducer = combineReducers({
-  scrap: scrapArticle.reducer,
-  tab: tabArticle.reducer,
-  articleList: articleList.reducer,
+  scrap: scrapArticleReducer,
+  tab: tabArticleReducer,
+  articleList: articleListReducer,
 });
 
 export const store = configureStore({

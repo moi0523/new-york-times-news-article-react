@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { ArticleProps } from '../../component/molecules/article';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ProcessedArticleData } from '../../helper/processedArticle';
 
 interface InitialStateInterface {
-  scrapArticle: ArticleProps[];
+  scrapArticle: ProcessedArticleData[];
 }
 
 const initialState: InitialStateInterface = {
@@ -13,20 +13,17 @@ export const scrapArticle = createSlice({
   name: 'scrap',
   initialState,
   reducers: {
-    addScrap(state, action) {
-      state.scrapArticle = action.payload.data;
-
-      const scrap = action.payload;
-      state.scrapArticle.push(scrap);
+    addScrap(state, action: PayloadAction<ProcessedArticleData>) {
+      const scrapArticle = action.payload;
+      state.scrapArticle = [...state.scrapArticle, scrapArticle];
     },
     deleteScrap(state, action) {
-      state.scrapArticle = state.scrapArticle.filter((scrap) => scrap.id !== action.payload.id);
-    },
-    getScrap(state, action) {
-      state.scrapArticle = action.payload.data;
+      state.scrapArticle = state.scrapArticle.filter(
+        (scrap) => scrap.headline !== action.payload.headline,
+      );
     },
   },
 });
 
-export const { addScrap, deleteScrap, getScrap } = scrapArticle.actions;
+export const { addScrap, deleteScrap } = scrapArticle.actions;
 export default scrapArticle.reducer;

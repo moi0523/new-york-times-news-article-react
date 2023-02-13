@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useStyletron } from 'styletron-react';
 import { border, borderRadius, padding } from 'polished';
 import { FilterModalPanel } from '../molecules/filterModalPanel';
@@ -10,7 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { CheckboxPanel } from '../molecules/checkboxPanel';
 import { Button } from '../atoms/button';
 
-const dummyData = [
+const countryData = [
   {
     text: '대한민국',
     value: '대한민국',
@@ -45,9 +45,14 @@ const dummyData = [
   },
 ];
 
-const FilterModal = () => {
+interface FilterModalProps {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const FilterModal = ({ setIsOpen }: FilterModalProps) => {
   const [css] = useStyletron();
   const [selectedDate, setSelectedDate] = useState<Date | null>();
+  const [headlineText, setHeadlineText] = useState<string>('');
 
   return (
     <article
@@ -66,6 +71,9 @@ const FilterModal = () => {
         <Input
           type="text"
           placeholder="검색하실 헤드라인을 입력해주세요."
+          onChange={(e) => {
+            setHeadlineText(e.target.value);
+          }}
           overrides={{
             Root: {
               style: {
@@ -126,11 +134,13 @@ const FilterModal = () => {
         </div>
       </FilterModalPanel>
       <FilterModalPanel title="국가">
-        <CheckboxPanel data={dummyData} groupName="checkboxPanel" />
+        <CheckboxPanel data={countryData} groupName="checkboxPanel" />
       </FilterModalPanel>
       <Button
         onClick={() => {
           console.log('save');
+
+          setIsOpen(false);
         }}
         overrides={{
           Root: {
@@ -162,4 +172,5 @@ const FilterModal = () => {
   );
 };
 
+export type { FilterModalProps };
 export { FilterModal };

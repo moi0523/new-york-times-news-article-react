@@ -4,20 +4,25 @@ import { borderRadius, padding } from 'polished';
 import { ReactComponent as StarFillSvg } from '../../assets/svgs/star_fill.svg';
 import { ReactComponent as StarEmptySvg } from '../../assets/svgs/star_empty.svg';
 import { addScrap, deleteScrap } from '../../store/article/scrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { ReducerType } from '../../store/store';
+import { ProcessedArticleData } from '../../helper/processedArticle';
 
 interface ArticleProps {
+  url: string;
   id: string;
   title: string;
   companyName: string;
   writer: string;
-  isScraped: boolean;
   createdAt: string;
 }
 
-const Article = ({ id, title, companyName, writer, isScraped, createdAt }: ArticleProps) => {
+const Article = ({ url, id, title, companyName, writer, createdAt }: ArticleProps) => {
   const [css] = useStyletron();
   const dispatch = useDispatch();
+  const scrapArticles = useSelector<ReducerType, ProcessedArticleData[]>(
+    (state) => state.scrap.scrapArticle,
+  );
 
   return (
     <article
@@ -48,23 +53,14 @@ const Article = ({ id, title, companyName, writer, isScraped, createdAt }: Artic
         >
           {title}
         </b>
-        {isScraped ? (
+        {scrapArticles.some((article) => article.headline === title) ? (
           <StarFillSvg
             className={css({
               marginTop: '4px',
             })}
             onClick={(e) => {
               e.preventDefault();
-              dispatch(
-                addScrap({
-                  id,
-                  title,
-                  companyName,
-                  writer,
-                  isScraped,
-                  createdAt,
-                }),
-              );
+              dispatch(deleteScrap({ headline: title }));
             }}
           />
         ) : (
@@ -74,7 +70,15 @@ const Article = ({ id, title, companyName, writer, isScraped, createdAt }: Artic
             })}
             onClick={(e) => {
               e.preventDefault();
-              dispatch(deleteScrap({ id }));
+              dispatch(
+                addScrap({
+                  url,
+                  source: companyName,
+                  headline: title,
+                  pubDate: createdAt,
+                  writer: writer,
+                }),
+              );
             }}
           />
         )}

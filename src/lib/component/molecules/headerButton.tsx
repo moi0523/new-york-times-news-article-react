@@ -60,7 +60,7 @@ const HeaderButton = ({ icon, text }: HeaderButtonProps) => {
           },
         }}
       >
-        <FilterModal />
+        <FilterModal setIsOpen={setIsOpenPopup} />
       </WithPortal>
     </>
   );

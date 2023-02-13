@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 interface UseInfiniteScrollProps {
+  isPending: boolean;
   root?: Element | Document | null;
   target: HTMLElement;
   onIntersect: IntersectionObserverCallback;
@@ -9,6 +10,7 @@ interface UseInfiniteScrollProps {
 }
 
 const useInfiniteScroll = ({
+  isPending,
   root = null,
   target,
   onIntersect,
@@ -16,6 +18,10 @@ const useInfiniteScroll = ({
   rootMargin = '0px',
 }: UseInfiniteScrollProps) => {
   useEffect(() => {
+    if (isPending) {
+      return;
+    }
+
     const observer = new IntersectionObserver(onIntersect, {
       root,
       rootMargin,
@@ -31,7 +37,7 @@ const useInfiniteScroll = ({
     return () => {
       observer.unobserve(target);
     };
-  }, [target, root, rootMargin, onIntersect, threshold]);
+  }, [isPending, target, root, rootMargin, onIntersect, threshold]);
 };
 
 export type { UseInfiniteScrollProps };
