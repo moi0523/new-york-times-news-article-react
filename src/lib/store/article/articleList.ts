@@ -18,15 +18,17 @@ export const articleList = createSlice({
     addArticleList: (state, action: PayloadAction<ProcessedArticleData[]>) => {
       const list = action.payload;
 
-      console.log('list', list);
-
       state.list = [...state.list, ...list];
     },
     addArticlePage: (state) => {
       state.page += 1;
     },
+    setClearArticleList: (state) => {
+      state.list = initialState.list;
+      state.page = initialState.page;
+    },
   },
 });
 
-export const { addArticleList, addArticlePage } = articleList.actions;
+export const { addArticleList, addArticlePage, setClearArticleList } = articleList.actions;
 export default articleList.reducer;

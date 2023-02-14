@@ -3,11 +3,13 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import scrapArticleReducer from './article/scrap';
 import tabArticleReducer from './article/tab';
 import articleListReducer from './article/articleList';
+import articleFilterReducer from './article/filter';
 
 const reducer = combineReducers({
   scrap: scrapArticleReducer,
   tab: tabArticleReducer,
   articleList: articleListReducer,
+  articleFilter: articleFilterReducer,
 });
 
 export const store = configureStore({

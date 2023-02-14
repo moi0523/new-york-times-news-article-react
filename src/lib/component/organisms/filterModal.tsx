@@ -9,6 +9,9 @@ import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CheckboxPanel } from '../molecules/checkboxPanel';
 import { Button } from '../atoms/button';
+import { setHeadline } from '../../store/article/filter';
+import { setClearArticleList } from '../../store/article/articleList';
+import { useDispatch } from 'react-redux';
 
 const countryData = [
   {
@@ -53,6 +56,7 @@ const FilterModal = ({ setIsOpen }: FilterModalProps) => {
   const [css] = useStyletron();
   const [selectedDate, setSelectedDate] = useState<Date | null>();
   const [headlineText, setHeadlineText] = useState<string>('');
+  const dispatch = useDispatch();
 
   return (
     <article
@@ -138,7 +142,10 @@ const FilterModal = ({ setIsOpen }: FilterModalProps) => {
       </FilterModalPanel>
       <Button
         onClick={() => {
-          console.log('save');
+          if (headlineText) {
+            dispatch(setClearArticleList());
+            dispatch(setHeadline(headlineText));
+          }
 
           setIsOpen(false);
         }}

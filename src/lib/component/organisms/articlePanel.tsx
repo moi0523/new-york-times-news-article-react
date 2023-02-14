@@ -21,6 +21,7 @@ const ArticlePanel = () => {
   const articleList = useSelector<ReducerType, ProcessedArticleData[]>(
     (state) => state.articleList.list,
   );
+  const filterHeadline = useSelector<ReducerType, string>((state) => state.articleFilter.headline);
   const [articleData, setArticleData] = useState<ProcessedArticleData[]>();
   const [target, setTarget] = useState(null);
   const [isPendingInfiniteScroll, setIsPendingInfiniteScroll] = useState(true);
@@ -31,6 +32,8 @@ const ArticlePanel = () => {
     if (tab === 'home') {
       getNewsArticleList({
         page: articlePage,
+        query: filterHeadline,
+        // filterQuery: articleFilterQuery,
       }).then((data) => {
         const { docs: articles } = data.response;
 
@@ -43,7 +46,7 @@ const ArticlePanel = () => {
         }, 1500);
       }
     }
-  }, []);
+  }, [filterHeadline]);
 
   useEffect(() => {
     switch (tab) {
@@ -72,11 +75,13 @@ const ArticlePanel = () => {
     isPending: isPendingInfiniteScroll || tab === 'scrap',
     target: target as unknown as HTMLElement,
     onIntersect: debounce(([{ isIntersecting }]) => {
-      if (isIntersecting && !isBlockedApi) {
+      if (isIntersecting && !isBlockedApi && articleList.length) {
         setIsBlockedApi(true);
 
         getNewsArticleList({
           page: articlePage + 1,
+          query: filterHeadline,
+          // filterQuery: articleFilterQuery,
         })
           .then((data) => {
             const { docs: articles } = data.response;

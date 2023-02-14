@@ -12,8 +12,6 @@ import { Provider as ReduxProvider } from 'react-redux';
 // import { store, persistor } from './lib/store/store';
 import { store } from './lib/store/store';
 
-console.log('1234');
-
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <>
