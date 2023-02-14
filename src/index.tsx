@@ -8,9 +8,11 @@ import { WithThemeProvider } from './lib/HOC/withThemeProvider';
 import { GlobalResetStyle } from './lib/style/globalReset';
 import { Helmet } from 'react-helmet';
 import { Provider as ReduxProvider } from 'react-redux';
-// import { PersistGate } from 'redux-persist/es/integration/react';
-// import { store, persistor } from './lib/store/store';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 import { store } from './lib/store/store';
+
+const persistor = persistStore(store);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -19,13 +21,13 @@ root.render(
       <style>{GlobalResetStyle}</style>
     </Helmet>
     <ReduxProvider store={store}>
-      {/*<PersistGate persistor={persistor}>*/}
-      <StyletronProvider value={styletron}>
-        <WithThemeProvider>
-          <App />
-        </WithThemeProvider>
-      </StyletronProvider>
-      {/*</PersistGate>*/}
+      <PersistGate loading={null} persistor={persistor}>
+        <StyletronProvider value={styletron}>
+          <WithThemeProvider>
+            <App />
+          </WithThemeProvider>
+        </StyletronProvider>
+      </PersistGate>
     </ReduxProvider>
   </>,
 );

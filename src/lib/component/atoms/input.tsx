@@ -18,7 +18,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onFocus?: (e: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: HTMLInputTypeAttribute;
-  // onClick?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input = ({

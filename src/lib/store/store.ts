@@ -1,9 +1,16 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-// import { persistStore } from 'redux-persist';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import scrapArticleReducer from './article/scrap';
 import tabArticleReducer from './article/tab';
 import articleListReducer from './article/articleList';
 import articleFilterReducer from './article/filter';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['scrap'],
+};
 
 const reducer = combineReducers({
   scrap: scrapArticleReducer,
@@ -12,11 +19,11 @@ const reducer = combineReducers({
   articleFilter: articleFilterReducer,
 });
 
+const setPersistReducer = persistReducer(persistConfig, reducer);
+
 export const store = configureStore({
-  reducer,
+  reducer: setPersistReducer,
 });
-// export const persistor = persistStore(store);
-// export default { store, persistor };
 
 export type ReducerType = ReturnType<typeof reducer>;
 export type AppDispatch = typeof store.dispatch;
