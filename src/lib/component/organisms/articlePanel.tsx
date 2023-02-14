@@ -82,7 +82,7 @@ const ArticlePanel = () => {
       default:
         break;
     }
-  }, [tab]);
+  }, [tab, scrapArticles]);
 
   useEffect(() => {
     if (tab === 'home') {
