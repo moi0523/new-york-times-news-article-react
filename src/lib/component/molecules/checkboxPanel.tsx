@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useStyletron } from 'styletron-react';
 import { Checkbox } from '../atoms/checkbox';
 import { border, borderRadius, padding } from 'polished';
@@ -10,9 +10,10 @@ interface CheckboxDataInterface {
 interface CheckboxPanelPanelProps {
   data: CheckboxDataInterface[];
   groupName?: string;
+  setSelectedItem?: Dispatch<SetStateAction<CheckboxDataInterface[]>>;
 }
 
-const CheckboxPanel = ({ data, groupName }: CheckboxPanelPanelProps) => {
+const CheckboxPanel = ({ data, groupName, setSelectedItem }: CheckboxPanelPanelProps) => {
   const [css] = useStyletron();
   const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([]);
 
@@ -36,6 +37,20 @@ const CheckboxPanel = ({ data, groupName }: CheckboxPanelPanelProps) => {
             selectedCheckbox={selectedCheckbox}
             setSelectedCheckbox={setSelectedCheckbox}
             value={item.value}
+            callback={(e) => {
+              const { checked } = e.target as HTMLInputElement;
+
+              if (checked) {
+                setSelectedItem?.((prev) => [
+                  ...prev,
+                  ...data.filter((countryItem) => countryItem.value === item.value),
+                ]);
+              } else {
+                setSelectedItem?.((prev) =>
+                  prev.filter((prevItem) => prevItem.value !== item.value),
+                );
+              }
+            }}
           >
             <div
               className={css({
@@ -65,5 +80,5 @@ const CheckboxPanel = ({ data, groupName }: CheckboxPanelPanelProps) => {
   );
 };
 
-export type { CheckboxPanelPanelProps };
+export type { CheckboxDataInterface, CheckboxPanelPanelProps };
 export { CheckboxPanel };

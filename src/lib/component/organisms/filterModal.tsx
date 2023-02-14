@@ -9,42 +9,43 @@ import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CheckboxPanel } from '../molecules/checkboxPanel';
 import { Button } from '../atoms/button';
-import { setHeadline } from '../../store/article/filter';
+import { setCountry, setHeadline, setPubDate } from '../../store/article/filter';
 import { setClearArticleList } from '../../store/article/articleList';
 import { useDispatch } from 'react-redux';
+import { reducePubDate } from '../../helper/processedArticle';
 
 const countryData = [
   {
     text: '대한민국',
-    value: '대한민국',
+    value: 'korea',
   },
   {
     text: '중국',
-    value: '중국',
+    value: 'china',
   },
   {
     text: '일본',
-    value: '일본',
+    value: 'japan',
   },
   {
     text: '미국',
-    value: '미국',
+    value: 'u.s.',
   },
   {
     text: '북한',
-    value: '북한',
+    value: 'north korea',
   },
   {
     text: '러시아',
-    value: '러시아',
+    value: 'russia',
   },
   {
     text: '프랑스',
-    value: '프랑스',
+    value: 'france',
   },
   {
     text: '영국',
-    value: '영국',
+    value: 'england',
   },
 ];
 
@@ -56,6 +57,7 @@ const FilterModal = ({ setIsOpen }: FilterModalProps) => {
   const [css] = useStyletron();
   const [selectedDate, setSelectedDate] = useState<Date | null>();
   const [headlineText, setHeadlineText] = useState<string>('');
+  const [selectedCountry, setSelectedCountry] = useState<typeof countryData>([]);
   const dispatch = useDispatch();
 
   return (
@@ -138,14 +140,27 @@ const FilterModal = ({ setIsOpen }: FilterModalProps) => {
         </div>
       </FilterModalPanel>
       <FilterModalPanel title="국가">
-        <CheckboxPanel data={countryData} groupName="checkboxPanel" />
+        <CheckboxPanel
+          data={countryData}
+          groupName="checkboxPanel"
+          setSelectedItem={setSelectedCountry}
+        />
       </FilterModalPanel>
       <Button
         onClick={() => {
           if (headlineText) {
-            dispatch(setClearArticleList());
             dispatch(setHeadline(headlineText));
           }
+
+          if (selectedDate) {
+            dispatch(setPubDate(reducePubDate(selectedDate)));
+          }
+
+          if (selectedCountry) {
+            dispatch(setCountry(selectedCountry));
+          }
+
+          dispatch(setClearArticleList());
 
           setIsOpen(false);
         }}

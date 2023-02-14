@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { borderRadius, padding } from 'polished';
+import { borderRadius, ellipsis, padding } from 'polished';
 import { ReactComponent as StarFillSvg } from '../../assets/svgs/star_fill.svg';
 import { ReactComponent as StarEmptySvg } from '../../assets/svgs/star_empty.svg';
 import { addScrap, deleteScrap } from '../../store/article/scrap';
@@ -17,7 +17,7 @@ interface ArticleProps {
   createdAt: string;
 }
 
-const Article = ({ url, id, title, companyName, writer, createdAt }: ArticleProps) => {
+const Article = ({ url, title, companyName, writer, createdAt }: ArticleProps) => {
   const [css] = useStyletron();
   const dispatch = useDispatch();
   const scrapArticles = useSelector<ReducerType, ProcessedArticleData[]>(
@@ -29,9 +29,9 @@ const Article = ({ url, id, title, companyName, writer, createdAt }: ArticleProp
       className={css({
         display: 'flex',
         flexDirection: 'column',
-        columnGap: '8px',
+        rowGap: '8px',
         backgroundColor: '#fefefe',
-        ...padding('20px'),
+        ...padding('10px', '20px'),
         ...borderRadius('top', '8px'),
         ...borderRadius('bottom', '8px'),
       })}
@@ -45,10 +45,12 @@ const Article = ({ url, id, title, companyName, writer, createdAt }: ArticleProp
         <b
           className={css({
             width: 'calc(100% - 31px)',
+            height: '56px',
             fontSize: '18px',
             lineHeight: '28px',
             letterSpacing: '-0.05em',
             color: '#000000',
+            ...ellipsis('100%', 2),
           })}
         >
           {title}

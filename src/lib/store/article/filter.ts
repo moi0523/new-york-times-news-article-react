@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CheckboxDataInterface } from '../../component/molecules/checkboxPanel';
 
-interface CheckboxDataInterface {
-  text: string;
-  value: string;
-}
 interface InitialStateInterface {
   headline: string;
   pubDate: string;

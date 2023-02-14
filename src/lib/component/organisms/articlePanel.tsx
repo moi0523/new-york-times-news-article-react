@@ -10,6 +10,7 @@ import { processedArticle, ProcessedArticleData } from '../../helper/processedAr
 import { useInfiniteScroll } from '../../hook/useInfiniteScroll';
 import { debounce } from 'lodash';
 import { addArticleList, addArticlePage } from '../../store/article/articleList';
+import { CheckboxDataInterface } from '../molecules/checkboxPanel';
 
 const ArticlePanel = () => {
   const [css] = useStyletron();
@@ -22,6 +23,10 @@ const ArticlePanel = () => {
     (state) => state.articleList.list,
   );
   const filterHeadline = useSelector<ReducerType, string>((state) => state.articleFilter.headline);
+  const filterPubDate = useSelector<ReducerType, string>((state) => state.articleFilter.pubDate);
+  const filterCountry = useSelector<ReducerType, CheckboxDataInterface[]>(
+    (state) => state.articleFilter.country,
+  );
   const [articleData, setArticleData] = useState<ProcessedArticleData[]>();
   const [target, setTarget] = useState(null);
   const [isPendingInfiniteScroll, setIsPendingInfiniteScroll] = useState(true);
@@ -30,10 +35,23 @@ const ArticlePanel = () => {
 
   useEffect(() => {
     if (tab === 'home') {
+      const pub_date = filterPubDate.replace(/./g, '-');
+      const glocations = filterCountry
+        .map((item, index) => {
+          if (filterCountry.length - 1 === index) {
+            return `"${item.value}"`;
+          }
+
+          return `"${item.value}", `;
+        })
+        .toString()
+        .replace(/,/g, '');
+
       getNewsArticleList({
         page: articlePage,
-        query: filterHeadline,
-        // filterQuery: articleFilterQuery,
+        headline: filterHeadline,
+        pub_date,
+        glocations,
       }).then((data) => {
         const { docs: articles } = data.response;
 
@@ -46,7 +64,7 @@ const ArticlePanel = () => {
         }, 1500);
       }
     }
-  }, [filterHeadline]);
+  }, [filterHeadline, filterPubDate, filterCountry]);
 
   useEffect(() => {
     switch (tab) {
@@ -78,10 +96,23 @@ const ArticlePanel = () => {
       if (isIntersecting && !isBlockedApi && articleList.length) {
         setIsBlockedApi(true);
 
+        const pub_date = filterPubDate.replace(/./g, '-');
+        const glocations = filterCountry
+          .map((item, index) => {
+            if (filterCountry.length - 1 === index) {
+              return `"${item.value}"`;
+            }
+
+            return `"${item.value}", `;
+          })
+          .toString()
+          .replace(/,/g, '');
+
         getNewsArticleList({
           page: articlePage + 1,
-          query: filterHeadline,
-          // filterQuery: articleFilterQuery,
+          headline: filterHeadline,
+          pub_date,
+          glocations,
         })
           .then((data) => {
             const { docs: articles } = data.response;

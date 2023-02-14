@@ -43,9 +43,8 @@ const Checkbox = ({
 
             return [...prev, value];
           });
-          if (selectedCheckbox.indexOf(value) === -1) {
-            callback?.(e);
-          }
+
+          callback?.(e);
         }}
         className={css({
           position: 'absolute',

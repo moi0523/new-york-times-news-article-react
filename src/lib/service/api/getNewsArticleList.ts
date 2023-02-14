@@ -6,7 +6,7 @@ interface NewsArticleInterface {
   headline: {
     main: string;
   };
-  pub_date: string;
+  pub_date: Date;
   byline: {
     original: string;
   };
@@ -20,27 +20,50 @@ interface NewsArticleListResponseInterface {
 
 interface GetNewsArticleListProps {
   page: number;
-  query?: string;
-  filterQuery?: string;
+  headline?: string;
+  pub_date?: string;
+  glocations?: string;
 }
 
 const getNewsArticleList: ({
   page,
-  query,
-  filterQuery,
+  headline,
+  pub_date,
+  glocations,
 }: GetNewsArticleListProps) => Promise<NewsArticleListResponseInterface> = ({
   page,
-  query,
-  filterQuery,
+  headline,
+  pub_date,
+  glocations,
 }: GetNewsArticleListProps) => {
-  const queryParams = query ? `&q=${query}` : '';
-  const filterQueryParams = filterQuery ? `&q=${filterQuery}` : '';
+  const filterQueryData: string[] = [];
+  if (headline) {
+    filterQueryData.push(`headline:("${headline}")`);
+  }
+
+  if (pub_date) {
+    filterQueryData.push(`pub_date:("${pub_date}")`);
+  }
+
+  if (glocations) {
+    filterQueryData.push(`glocations:("${glocations}")`);
+  }
+
+  const filterQueryParams = filterQueryData
+    .map((filterQueryItem, index) => {
+      if (index === filterQueryData.length - 1) {
+        return `${filterQueryItem}`;
+      }
+
+      return `${filterQueryItem} AND `;
+    })
+    .toString()
+    .replace(/,/g, '');
 
   return getData(
     'https://api.nytimes.com/svc/search/v2/articlesearch.json' +
       `?page=${page}` +
-      `${queryParams}` +
-      `${filterQueryParams}` +
+      `${filterQueryParams ? `&fq=${filterQueryParams}` : ''}` +
       '&api-key=3rcojQQJubybL3sZIqeSEDxAFJAZauj9',
   );
 };
