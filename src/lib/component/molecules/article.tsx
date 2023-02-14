@@ -38,6 +38,12 @@ const Article = ({ url, title, companyName, writer, createdAt }: ArticleProps) =
         ...borderRadius('top', '8px'),
         ...borderRadius('bottom', '8px'),
       })}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        window.location.href = url;
+      }}
     >
       <div
         className={css({
@@ -65,6 +71,7 @@ const Article = ({ url, title, companyName, writer, createdAt }: ArticleProps) =
             })}
             onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
 
               deleteScrapToast();
 
@@ -78,6 +85,7 @@ const Article = ({ url, title, companyName, writer, createdAt }: ArticleProps) =
             })}
             onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
 
               addScrapToast();
 
