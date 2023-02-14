@@ -35,7 +35,8 @@ const ArticlePanel = () => {
 
   useEffect(() => {
     if (tab === 'home') {
-      const pub_date = filterPubDate.replace(/./g, '-');
+      const pub_date = filterPubDate.replace(/\./g, '-');
+
       const glocations = filterCountry
         .map((item, index) => {
           if (filterCountry.length - 1 === index) {
@@ -96,7 +97,7 @@ const ArticlePanel = () => {
       if (isIntersecting && !isBlockedApi && articleList.length) {
         setIsBlockedApi(true);
 
-        const pub_date = filterPubDate.replace(/./g, '-');
+        const pub_date = filterPubDate.replace(/\./g, '-');
         const glocations = filterCountry
           .map((item, index) => {
             if (filterCountry.length - 1 === index) {
@@ -120,7 +121,11 @@ const ArticlePanel = () => {
             dispatch(addArticleList(processedArticle(articles)));
             dispatch(addArticlePage());
 
-            setIsBlockedApi(false);
+            if (!articles.length) {
+              setIsBlockedApi(true);
+            } else {
+              setIsBlockedApi(false);
+            }
           })
           .catch((error) => {
             console.log('error: ', error);

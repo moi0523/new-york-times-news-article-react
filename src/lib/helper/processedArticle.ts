@@ -13,7 +13,7 @@ interface ProcessedArticleData {
 const reduceSource = (source: string) =>
   source.indexOf('New York Times') !== -1 ? 'nytimes' : source;
 
-const reducePubDate = (pubDate: Date) => dayjs(pubDate).format('YYYY.MM.DD');
+const reducePubDate = (pubDate: Date) => dayjs(pubDate).locale('ko').format('YYYY.MM.DD');
 
 const reduceWriter = (writer: string) => {
   const writerName = writer?.split('By ')[1];

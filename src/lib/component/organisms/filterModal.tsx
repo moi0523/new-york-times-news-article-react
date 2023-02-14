@@ -7,12 +7,13 @@ import { ReactComponent as CalendarSvg } from '../../assets/svgs/calendar.svg';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
-import { CheckboxPanel } from '../molecules/checkboxPanel';
+import { CheckboxDataInterface, CheckboxPanel } from '../molecules/checkboxPanel';
 import { Button } from '../atoms/button';
 import { setCountry, setHeadline, setPubDate } from '../../store/article/filter';
 import { setClearArticleList } from '../../store/article/articleList';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { reducePubDate } from '../../helper/processedArticle';
+import { ReducerType } from '../../store/store';
 
 const countryData = [
   {
@@ -55,8 +56,13 @@ interface FilterModalProps {
 
 const FilterModal = ({ setIsOpen }: FilterModalProps) => {
   const [css] = useStyletron();
+  const filterHeadline = useSelector<ReducerType, string>((state) => state.articleFilter.headline);
+  const filterPubDate = useSelector<ReducerType, string>((state) => state.articleFilter.pubDate);
+  const filterCountry = useSelector<ReducerType, CheckboxDataInterface[]>(
+    (state) => state.articleFilter.country,
+  );
   const [selectedDate, setSelectedDate] = useState<Date | null>();
-  const [headlineText, setHeadlineText] = useState<string>('');
+  const [headlineText, setHeadlineText] = useState<string>(filterHeadline);
   const [selectedCountry, setSelectedCountry] = useState<typeof countryData>([]);
   const dispatch = useDispatch();
 
@@ -96,6 +102,7 @@ const FilterModal = ({ setIsOpen }: FilterModalProps) => {
               },
             },
           }}
+          {...(headlineText ? { defaultValue: headlineText } : {})}
         />
       </FilterModalPanel>
       <FilterModalPanel title="날짜">
@@ -141,6 +148,7 @@ const FilterModal = ({ setIsOpen }: FilterModalProps) => {
       </FilterModalPanel>
       <FilterModalPanel title="국가">
         <CheckboxPanel
+          value={filterCountry.map((item) => item.value)}
           data={countryData}
           groupName="checkboxPanel"
           setSelectedItem={setSelectedCountry}

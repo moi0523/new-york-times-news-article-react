@@ -6,11 +6,12 @@ import { FilterModal } from '../organisms/filterModal';
 import { WithPortal } from '../../HOC/withPortal';
 
 interface HeaderButtonProps {
+  hasFilter?: boolean;
   icon?: ReactNode;
   text: string;
 }
 
-const HeaderButton = ({ icon, text }: HeaderButtonProps) => {
+const HeaderButton = ({ hasFilter, icon, text }: HeaderButtonProps) => {
   const [css] = useStyletron();
   const [isOpenPopup, setIsOpenPopup] = useState(false);
 
@@ -27,7 +28,7 @@ const HeaderButton = ({ icon, text }: HeaderButtonProps) => {
               justifyContent: 'center',
               alignItems: 'center',
               columnGap: '4px',
-              ...border('1px', 'solid', '#c4c4c4'),
+              ...border('1px', 'solid', hasFilter ? '#82b0f4' : '#c4c4c4'),
               ...borderRadius('top', '30px'),
               ...borderRadius('bottom', '30px'),
               ...padding('6px', '12px', '4px'),
@@ -41,7 +42,7 @@ const HeaderButton = ({ icon, text }: HeaderButtonProps) => {
             fontSize: '14px',
             lineHeight: '24px',
             letterSpacing: '-0.04em',
-            color: '#6d6d6d',
+            color: hasFilter ? '#3478f6' : '#6d6d6d',
           })}
         >
           {text}

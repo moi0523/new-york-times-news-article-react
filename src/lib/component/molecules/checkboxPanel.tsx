@@ -8,14 +8,15 @@ interface CheckboxDataInterface {
   value: string;
 }
 interface CheckboxPanelPanelProps {
+  value: string[];
   data: CheckboxDataInterface[];
   groupName?: string;
   setSelectedItem?: Dispatch<SetStateAction<CheckboxDataInterface[]>>;
 }
 
-const CheckboxPanel = ({ data, groupName, setSelectedItem }: CheckboxPanelPanelProps) => {
+const CheckboxPanel = ({ value, data, groupName, setSelectedItem }: CheckboxPanelPanelProps) => {
   const [css] = useStyletron();
-  const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([]);
+  const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>(value);
 
   return (
     <article

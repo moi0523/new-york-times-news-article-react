@@ -4,9 +4,17 @@ import { border, padding } from 'polished';
 import { HeaderButton } from '../molecules/headerButton';
 import { ReactComponent as SearchSvg } from '../../assets/svgs/search.svg';
 import { ReactComponent as CalendarSvg } from '../../assets/svgs/calendar.svg';
+import { useSelector } from 'react-redux';
+import { ReducerType } from '../../store/store';
+import { CheckboxDataInterface } from '../molecules/checkboxPanel';
 
 const Header = () => {
   const [css] = useStyletron();
+  const filterHeadline = useSelector<ReducerType, string>((state) => state.articleFilter.headline);
+  const filterPubDate = useSelector<ReducerType, string>((state) => state.articleFilter.pubDate);
+  const filterCountry = useSelector<ReducerType, CheckboxDataInterface[]>(
+    (state) => state.articleFilter.country,
+  );
 
   return (
     <article
@@ -23,9 +31,26 @@ const Header = () => {
         ...border('bottom', '1px', 'solid', '#c4c4c4'),
       })}
     >
-      <HeaderButton icon={<SearchSvg />} text="전체 헤드라인" />
-      <HeaderButton icon={<CalendarSvg />} text="전체 날짜" />
-      <HeaderButton text="전체 국가" />
+      <HeaderButton
+        hasFilter={Boolean(filterHeadline)}
+        icon={<SearchSvg fill={filterHeadline ? '#3478f6' : ''} />}
+        text={filterHeadline || '전체 헤드라인'}
+      />
+      <HeaderButton
+        hasFilter={Boolean(filterPubDate)}
+        icon={<CalendarSvg fill={filterPubDate ? '#3478f6' : ''} />}
+        text={filterPubDate || '전체 날짜'}
+      />
+      <HeaderButton
+        hasFilter={Boolean(filterCountry.length)}
+        text={
+          filterCountry.length
+            ? filterCountry.length === 1
+              ? filterCountry[0].text
+              : `${filterCountry[0].text} 외 ${filterCountry.length - 1}`
+            : '전체 국가'
+        }
+      />
     </article>
   );
 };
