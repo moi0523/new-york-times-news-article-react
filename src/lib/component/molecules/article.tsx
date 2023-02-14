@@ -7,6 +7,7 @@ import { addScrap, deleteScrap } from '../../store/article/scrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from '../../store/store';
 import { ProcessedArticleData } from '../../helper/processedArticle';
+import { toast } from 'react-toastify';
 
 interface ArticleProps {
   url: string;
@@ -23,6 +24,8 @@ const Article = ({ url, title, companyName, writer, createdAt }: ArticleProps) =
   const scrapArticles = useSelector<ReducerType, ProcessedArticleData[]>(
     (state) => state.scrap.scrapArticle,
   );
+  const addScrapToast = () => toast('스크랩이 추가되었어요.');
+  const deleteScrapToast = () => toast('스크랩이 삭제되었어요.');
 
   return (
     <article
@@ -62,6 +65,9 @@ const Article = ({ url, title, companyName, writer, createdAt }: ArticleProps) =
             })}
             onClick={(e) => {
               e.preventDefault();
+
+              deleteScrapToast();
+
               dispatch(deleteScrap({ headline: title }));
             }}
           />
@@ -72,6 +78,9 @@ const Article = ({ url, title, companyName, writer, createdAt }: ArticleProps) =
             })}
             onClick={(e) => {
               e.preventDefault();
+
+              addScrapToast();
+
               dispatch(
                 addScrap({
                   url,

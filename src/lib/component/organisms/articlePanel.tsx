@@ -11,6 +11,8 @@ import { useInfiniteScroll } from '../../hook/useInfiniteScroll';
 import { debounce } from 'lodash';
 import { addArticleList, addArticlePage } from '../../store/article/articleList';
 import { CheckboxDataInterface } from '../molecules/checkboxPanel';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ArticlePanel = () => {
   const [css] = useStyletron();
@@ -157,6 +159,18 @@ const ArticlePanel = () => {
         />
       ))}
       <div ref={setTarget as LegacyRef<HTMLDivElement>} />
+      <ToastContainer
+        position="top-right"
+        autoClose={300}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </article>
   );
 };
