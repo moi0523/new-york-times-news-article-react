@@ -4,6 +4,9 @@ import { border, borderRadius, padding } from 'polished';
 import { Button } from '../atoms/button';
 import { FilterModal } from '../organisms/filterModal';
 import { WithPortal } from '../../HOC/withPortal';
+import { useSelector } from 'react-redux';
+import { ReducerType } from '../../store/store';
+import { SelectedUnion } from '../../store/article/tab';
 
 interface HeaderButtonProps {
   hasFilter?: boolean;
@@ -14,12 +17,15 @@ interface HeaderButtonProps {
 const HeaderButton = ({ hasFilter, icon, text }: HeaderButtonProps) => {
   const [css] = useStyletron();
   const [isOpenPopup, setIsOpenPopup] = useState(false);
+  const tab = useSelector<ReducerType, SelectedUnion>((state) => state.tab.selectedTab);
 
   return (
     <>
       <Button
         onClick={() => {
-          setIsOpenPopup(true);
+          if (tab !== 'scrap') {
+            setIsOpenPopup(true);
+          }
         }}
         overrides={{
           Root: {

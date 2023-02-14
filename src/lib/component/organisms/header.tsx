@@ -7,9 +7,11 @@ import { ReactComponent as CalendarSvg } from '../../assets/svgs/calendar.svg';
 import { useSelector } from 'react-redux';
 import { ReducerType } from '../../store/store';
 import { CheckboxDataInterface } from '../molecules/checkboxPanel';
+import { SelectedUnion } from '../../store/article/tab';
 
 const Header = () => {
   const [css] = useStyletron();
+  const tab = useSelector<ReducerType, SelectedUnion>((state) => state.tab.selectedTab);
   const filterHeadline = useSelector<ReducerType, string>((state) => state.articleFilter.headline);
   const filterPubDate = useSelector<ReducerType, string>((state) => state.articleFilter.pubDate);
   const filterCountry = useSelector<ReducerType, CheckboxDataInterface[]>(
@@ -32,19 +34,19 @@ const Header = () => {
       })}
     >
       <HeaderButton
-        hasFilter={Boolean(filterHeadline)}
-        icon={<SearchSvg fill={filterHeadline ? '#3478f6' : ''} />}
-        text={filterHeadline || '전체 헤드라인'}
+        hasFilter={Boolean(tab !== 'scrap' && filterHeadline)}
+        icon={<SearchSvg fill={tab !== 'scrap' && filterHeadline ? '#3478f6' : ''} />}
+        text={tab === 'scrap' ? '전체 헤드라인' : filterHeadline || '전체 헤드라인'}
       />
       <HeaderButton
-        hasFilter={Boolean(filterPubDate)}
-        icon={<CalendarSvg fill={filterPubDate ? '#3478f6' : ''} />}
-        text={filterPubDate || '전체 날짜'}
+        hasFilter={Boolean(tab !== 'scrap' && filterPubDate)}
+        icon={<CalendarSvg fill={tab !== 'scrap' && filterPubDate ? '#3478f6' : ''} />}
+        text={tab === 'scrap' ? '전체 날짜' : filterPubDate || '전체 날짜'}
       />
       <HeaderButton
-        hasFilter={Boolean(filterCountry.length)}
+        hasFilter={Boolean(tab !== 'scrap' && filterCountry.length)}
         text={
-          filterCountry.length
+          tab !== 'scrap' && filterCountry.length
             ? filterCountry.length === 1
               ? filterCountry[0].text
               : `${filterCountry[0].text} 외 ${filterCountry.length - 1}`

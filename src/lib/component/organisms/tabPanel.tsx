@@ -49,7 +49,7 @@ const TabPanel = () => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              columnGap: '9px',
+              rowGap: '9px',
             },
           },
         }}
@@ -78,7 +78,7 @@ const TabPanel = () => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              columnGap: '9px',
+              rowGap: '9px',
             },
           },
         }}
