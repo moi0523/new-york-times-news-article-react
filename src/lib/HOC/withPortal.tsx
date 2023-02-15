@@ -1,5 +1,5 @@
 import { isNull } from 'lodash';
-import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, MouseEvent, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useKey, useMount } from 'react-use';
 import { useStyletron } from 'styletron-react';
@@ -63,7 +63,7 @@ const WithPortal = ({
         <StyledWithPortalBackgroundHolder
           id="backgroundHolder"
           className={css(getOverrideStyle<WithPortalProps>(overrides))}
-          onClick={(event) => {
+          onClick={(event: MouseEvent<HTMLDivElement>) => {
             if (!isDimBlocked && (event.target as HTMLDivElement).id === 'backgroundHolder') {
               setIsOpen(false);
             }
