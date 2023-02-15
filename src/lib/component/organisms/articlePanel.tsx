@@ -13,6 +13,7 @@ import { addArticleList, addArticlePage } from '../../store/article/articleList'
 import { CheckboxDataInterface } from '../molecules/checkboxPanel';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { EmptyScrapPanel } from './emptyScrapPanel';
 
 const ArticlePanel = () => {
   const [css] = useStyletron();
@@ -36,31 +37,31 @@ const ArticlePanel = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const pub_date = filterPubDate.replace(/\./g, '-');
+
+    const glocations = filterCountry
+      .map((item, index) => {
+        if (filterCountry.length - 1 === index) {
+          return `"${item.value}"`;
+        }
+
+        return `"${item.value}", `;
+      })
+      .toString()
+      .replace(/,/g, '');
+
+    getNewsArticleList({
+      page: articlePage,
+      headline: filterHeadline,
+      pub_date,
+      glocations,
+    }).then((data) => {
+      const { docs: articles } = data.response;
+
+      dispatch(addArticleList(processedArticle(articles)));
+    });
+
     if (tab === 'home') {
-      const pub_date = filterPubDate.replace(/\./g, '-');
-
-      const glocations = filterCountry
-        .map((item, index) => {
-          if (filterCountry.length - 1 === index) {
-            return `"${item.value}"`;
-          }
-
-          return `"${item.value}", `;
-        })
-        .toString()
-        .replace(/,/g, '');
-
-      getNewsArticleList({
-        page: articlePage,
-        headline: filterHeadline,
-        pub_date,
-        glocations,
-      }).then((data) => {
-        const { docs: articles } = data.response;
-
-        dispatch(addArticleList(processedArticle(articles)));
-      });
-
       if (isPendingInfiniteScroll) {
         window.setTimeout(() => {
           setIsPendingInfiniteScroll(false);
@@ -137,6 +138,10 @@ const ArticlePanel = () => {
       }
     }, 100),
   });
+
+  if (tab === 'scrap' && !scrapArticles.length) {
+    return <EmptyScrapPanel />;
+  }
 
   return (
     <article

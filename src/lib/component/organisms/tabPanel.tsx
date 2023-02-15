@@ -17,9 +17,9 @@ const TabPanel = () => {
 
   useEffect(() => {
     if (window.location.pathname.indexOf('scrap') !== -1) {
-      changeTab({ selectedTab: 'scrap' });
+      dispatch(changeTab({ selectedTab: 'scrap' }));
     } else {
-      changeTab({ selectedTab: 'home' });
+      dispatch(changeTab({ selectedTab: 'home' }));
     }
   }, [tab]);
 
